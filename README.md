@@ -1,59 +1,104 @@
-# Frontend7bank
+<h1>7Bank API</h1>
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
+<h2>Description of the project</h2>
+<p>API REST criada em .NET 9, seguindo arquitetura Clean, com camadas de Model, Repository, Service e Controllers.
+O objetivo é simular as principais operações de um banco digital, como gerenciamento de usuários, contas e transações (PIX).</p> 
 
-## Development server
+<h2>Why i make this project?</h2>
+<p>I make this project so i can learn more things and functions in JavaScript, also to improve my coding skills by doing something i like to do.</p>
 
-To start a local development server, run:
+<h2>How does this project work?</h2>
+<P>The user has to correctly write the text displayed at the top, once the user has finished writing the text, the time in seconds that the user took will appear at the bottom, as well as a table of the time that the user took a while to write the other sentences. At the top there is also a button to change the theme to a darker or lighter one.</p>
 
-```bash
-ng serve
-```
+<ul>Tecnologies
+  <li>.NET 9 / ASP.NET Core Web API</li>
+  <li>Entity Framework Core</li>
+  <li>SQL Server</li>
+  <li>Migrations</li>
+  <li>Dependency Injection</li>
+  <li>Repository Pattern</li>
+  <li>DTOs</li>
+  <li>Postman (testes)</li>
+  <li>Angular</li>
+</ul>
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+<h2>Arquitetura da Aplicação</h2>
+7Bank.Api/
+│
+├── Controllers/        → Endpoints da API
+├── Models/             → Classes de domínio (Users, Account, Transaction)
+├── DTOs/               → Objetos de transferência de dados
+├── Services/           → Regras de negócio
+├── Repositories/       → Acesso ao banco de dados
+├── Data/               → DbContext + Configurações
+└── Migrations/         → Histórico do EF
 
-## Code scaffolding
+<h2>Como executar o Projeto</h2>
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+<p>Inserir a seguinte conexão no appsettings.json: "{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.;Database=7Bank;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}"</p>
+<br>
+<p>Aplicar as migrations: "dotnet ef database update"</p>
+<p>Rodar a API: "dotnet run"</p>
 
-```bash
-ng generate component component-name
-```
+<h2>Rotas e Endpoints</h2>
+<h3>👤 Users</h3>
+Método	Rota	Descrição
+POST	/api/users	Criar usuário + conta automática
+POST	/api/users/login	Validar login
+GET	/api/users/{id}	Buscar usuário por ID
+GET	/api/users/email/{email}	Buscar por Email
+GET	/api/users/cpf/{cpf}	Buscar por CPF
+GET	/api/users	Listar usuários
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+<h3>🏦 Accounts</h3>
+Método	Rota	Descrição
+GET	/api/account/{id}	Buscar conta por ID
+GET	/api/account/user/{userId}	Buscar conta por usuário
+GET	/api/account/saldo/{accountId}	Ver saldo
+GET	/api/account	Listar todas
+PUT	/api/account	Atualizar conta
+DELETE	/api/account/{accountId}	Excluir se não houver transações
+POST	/api/account/inativar/{accountId}	Inativar conta
 
-```bash
-ng generate --help
-```
+<h3>Transactions / PIX</h3>
+Método	Rota	Descrição
+POST	/api/transactions/pix/{fromUserId}	Realizar PIX
+POST	/api/transactions/pix	PIX versão DTO
+GET	/api/transactions/user/{userId}	Histórico por usuário
+GET	/api/transactions/last3months/{userId}	Últimos 3 meses
+GET	/api/transactions	Todas transações
 
-## Building
+<h2>💳 Como funciona o PIX</h2>
+<p>Enviar: "{
+  "fromUserId": 1,
+  "identifier": "12345678901",
+  "identifierType": "cpf",
+  "amount": 50
+}
+" Retorno: "{
+  "success": true,
+  "message": "Transferência realizada com sucesso!"
+}
+"</p>
 
-To build the project run:
+<ul>📘 Regras de Negócio Atendidas
+<li>✔ Usuário só pode ter 1 conta</li>
+<li>✔ Conta é criada automaticamente ao criar usuário</li>
+<li>✔ Conta não pode ser excluída se tiver movimentações</li>
+<li>✔ Caso tenha transações → somente inativar</li>
+<li>✔ PIX só funciona:</li>
+<li>para destinatário cadastrado</li>
+<li>saldo suficiente</li>
+<li>valor > 0</li>
+<li>✔ Busca por transações:</li>
+<li>todas</li>
+<li>do usuário</li>
+<li>últimos 3 meses</li>
+</ul>
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+<h2>Author</h2>
+<p>Lucas Landivar de Morais</p>
